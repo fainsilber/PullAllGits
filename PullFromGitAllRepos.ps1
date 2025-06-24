@@ -1,23 +1,30 @@
+param(
+    [string]$runDirectory = "C:\git\jf\PullAllGits\",
+    [string]$gitDirectory = "C:\git\ncr\"
+)
 # List of Git directories to pull from
 $gitDirectories = @(
-    "C:\repos\ncr\emeraldgx-third-party",
-    "C:\repos\ncr\emeraldgx",
-    "C:\repos\ncr\emeraldgx-gitops-multi",
-    "C:\repos\ncr\charts",
-    "C:\repos\ncr\edge-infra",
-    #"C:\repos\ncr\emeraldgx-core-v3",
-    "C:\repos\ncr\emeraldgx-core-v2",
-    "C:\repos\ncr\emeraldgx-core"
+    "charts",
+    "edge-infra",
+    "emeraldgx",
+    "emeraldgx-gitops-multi",
+    "emeraldgx-third-party",
+    "emeraldgx-core-v2"
 )
 
 # Path to the GitPull script
-$gitPullScript = "C:\PullAllGits\GitPull.ps1"
+$originalDirectory = Get-Location
 
+
+$gitPullScript = "$runDirectory\GitPull.ps1"
+# Write-Host $originalDirectory$gitPullScript
+# [void][System.Console]::ReadKey($true)
 # Loop through each directory and call GitPull.ps1
 foreach ($dir in $gitDirectories) {
-    Write-Host "Pulling from repository: $dir" -ForegroundColor Green
-    & $gitPullScript -gitDirectory $dir
+    Write-Host "Pulling from git directory: $dir" -ForegroundColor Green
+    & $gitPullScript -gitDirectory $gitDirectory$dir
     Write-Host "------------------------------------------"
 }
 
-Write-Host "Pull operation completed for all repositories." -ForegroundColor Cyan
+Write-Host "Pull operation completed for all git repositories." -ForegroundColor Cyan
+Set-Location $originalDirectory
