@@ -118,7 +118,7 @@ if ($encrypt -eq 'Y' -or $encrypt -eq 'y') {
             $filePath = Join-Path $scriptPath "Output-Files\$file"
             if (Test-Path $filePath) {
                 try {
-                    & (Join-Path $scriptPath "Protect-ConfigFile.ps1") -FilePath $filePath -Password $password -DeleteOriginal
+                    & (Join-Path $scriptPath "Encryption-Scripts\Protect-ConfigFile.ps1") -FilePath $filePath -Password $password -DeleteOriginal
                     Write-Host "  ✓ Encrypted: $file" -ForegroundColor Green
                 }
                 catch {
@@ -137,14 +137,14 @@ if ($encrypt -eq 'Y' -or $encrypt -eq 'y') {
     else {
         Write-Host "✗ Passwords do not match. Files NOT encrypted." -ForegroundColor Red
         Write-Host "  You can manually encrypt them later using:" -ForegroundColor Yellow
-        Write-Host "  .\Protect-ConfigFile.ps1 -FilePath <file>" -ForegroundColor Cyan
+        Write-Host "  .\Encryption-Scripts\Protect-ConfigFile.ps1 -FilePath <file>" -ForegroundColor Cyan
         Write-Host ""
     }
 }
 else {
     Write-Host "⚠ Files will remain UNENCRYPTED." -ForegroundColor Yellow
     Write-Host "  You can manually encrypt them later using:" -ForegroundColor Yellow
-    Write-Host "  .\Protect-ConfigFile.ps1 -FilePath <file>" -ForegroundColor Cyan
+    Write-Host "  .\Encryption-Scripts\Protect-ConfigFile.ps1 -FilePath <file>" -ForegroundColor Cyan
     Write-Host ""
 }
 

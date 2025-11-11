@@ -41,7 +41,7 @@ if ($encryptedFiles) {
         $decryptionFailed = $false
         foreach ($file in $encryptedFiles) {
             try {
-                & (Join-Path $scriptPath "Unprotect-ConfigFile.ps1") -FilePath $file.FullName -Password $password -DeleteEncrypted
+                & (Join-Path $scriptPath "Encryption-Scripts\Unprotect-ConfigFile.ps1") -FilePath $file.FullName -Password $password -DeleteEncrypted
                 Write-Host "  ✓ Decrypted: $($file.Name)" -ForegroundColor Green
             }
             catch {
@@ -65,7 +65,7 @@ if ($encryptedFiles) {
     else {
         Write-Host "⚠ Files will remain encrypted. Import may fail." -ForegroundColor Yellow
         Write-Host "  You can manually decrypt them using:" -ForegroundColor Yellow
-        Write-Host "  .\Unprotect-ConfigFile.ps1 -FilePath <file>" -ForegroundColor Cyan
+        Write-Host "  .\Encryption-Scripts\Unprotect-ConfigFile.ps1 -FilePath <file>" -ForegroundColor Cyan
         Write-Host ""
     }
 }
