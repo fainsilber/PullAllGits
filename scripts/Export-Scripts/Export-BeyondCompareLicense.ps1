@@ -40,7 +40,7 @@ foreach ($regPath in $registryPaths) {
                 $licenseFound = $true
                 
                 # Export the entire registry key
-                $exportPath = Join-Path $PSScriptRoot "BeyondCompare-License.reg"
+                $exportPath = Join-Path (Split-Path $PSScriptRoot -Parent) "Output-Files\BeyondCompare-License.reg"
                 
                 # Use reg export to export the registry key
                 $regPathForExport = $regPath -replace "HKCU:\\", "HKEY_CURRENT_USER\" -replace "HKLM:\\", "HKEY_LOCAL_MACHINE\"
@@ -55,7 +55,7 @@ foreach ($regPath in $registryPaths) {
                     Write-Host ""
                     
                     # Also create a JSON file with metadata
-                    $metadataPath = Join-Path $PSScriptRoot "BeyondCompare-License-Info.json"
+                    $metadataPath = Join-Path (Split-Path $PSScriptRoot -Parent) "Output-Files\BeyondCompare-License-Info.json"
                     @{
                         ExportDate = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
                         RegistryPath = $regPath

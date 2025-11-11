@@ -1,8 +1,59 @@
-# New PC Setup Scripts
+# Ne## 📁 Folder Structure
+
+```
+scripts/
+├── setup-new-pc.ps1                → Main installation script (root)
+├── README.md                       → This file (main documentation)
+│
+├── Export-Scripts/                 → All export scripts
+│   ├── Export-AllConfigurations.ps1    (Master export + encryption)
+│   ├── Export-PSReadLineHistory.ps1
+│   ├── Export-VSCodeExtensions.ps1
+│   ├── Export-GitConfig.ps1
+│   └── Export-BeyondCompareLicense.ps1
+│
+├── Import-Scripts/                 → All import scripts
+│   ├── Import-AllConfigurations.ps1    (Master import + decryption)
+│   ├── Import-PSReadLineHistory.ps1
+│   ├── Import-VSCodeExtensions.ps1
+│   ├── Import-GitConfig.ps1
+│   └── Import-BeyondCompareLicense.ps1
+│
+├── Encryption-Scripts/             → All encryption utilities
+│   ├── Protect-ConfigFile.ps1          (Encrypt single file)
+│   ├── Unprotect-ConfigFile.ps1        (Decrypt single file)
+│   ├── Protect-AllConfigFiles.ps1      (Batch encrypt)
+│   ├── Unprotect-AllConfigFiles.ps1    (Batch decrypt)
+│   └── Test-Encryption.ps1             (Test suite)
+│
+├── Documentation/                  → All detailed documentation
+│   ├── CHECKLIST.md
+│   ├── ENCRYPTION-*.md
+│   └── FILE-STRUCTURE.md
+│
+└── Output-Files/                   → Exported configuration files
+    ├── .gitignore                      (Protects sensitive data)
+    └── *.txt, *.reg, *.json, *.encrypted
+```ipts
 
 A comprehensive collection of PowerShell scripts to automate the setup of a new Windows PC, including software installation and configuration migration.
 
-## 📋 Contents
+## � Folder Structure
+
+```
+scripts/
+├── *.ps1                       → All executable scripts (root level)
+├── README.md                   → This file (main documentation)
+├── Documentation/              → All detailed documentation
+│   ├── CHECKLIST.md
+│   ├── ENCRYPTION-*.md
+│   └── FILE-STRUCTURE.md
+└── Output-Files/               → Exported configuration files
+    ├── .gitignore              → Protects sensitive data
+    └── *.txt, *.reg, *.json    → Your exported configs
+```
+
+## �📋 Contents
 
 ### Main Setup Script
 - **`setup-new-pc.ps1`** - Main script that installs all software and configures PowerShell profile
@@ -41,7 +92,7 @@ A comprehensive collection of PowerShell scripts to automate the setup of a new 
 
 2. Run the master export script:
    ```powershell
-   .\Export-AllConfigurations.ps1
+   .\Export-Scripts\Export-AllConfigurations.ps1
    ```
 
 3. **🔐 NEW: Optional Encryption**
@@ -70,7 +121,7 @@ A comprehensive collection of PowerShell scripts to automate the setup of a new 
 
 5. After installation completes, run the import script:
    ```powershell
-   .\Import-AllConfigurations.ps1
+   .\Import-Scripts\Import-AllConfigurations.ps1
    ```
 
 6. **🔐 NEW: Auto-Decryption**
@@ -181,24 +232,24 @@ Your exported files may contain sensitive information. The toolkit now includes 
 **Manual encryption:**
 ```powershell
 # Single file
-.\Protect-ConfigFile.ps1 -FilePath "git-config-backup.txt" -DeleteOriginal
+.\Encryption-Scripts\Protect-ConfigFile.ps1 -FilePath "Output-Files\git-config-backup.txt" -DeleteOriginal
 
 # All files at once
-.\Protect-AllConfigFiles.ps1 -DeleteOriginals
+.\Encryption-Scripts\Protect-AllConfigFiles.ps1 -DeleteOriginals
 ```
 
 **Manual decryption:**
 ```powershell
 # Single file
-.\Unprotect-ConfigFile.ps1 -FilePath "git-config-backup.txt.encrypted"
+.\Encryption-Scripts\Unprotect-ConfigFile.ps1 -FilePath "Output-Files\git-config-backup.txt.encrypted"
 
 # All files at once
-.\Unprotect-AllConfigFiles.ps1
+.\Encryption-Scripts\Unprotect-AllConfigFiles.ps1
 ```
 
 **Test encryption system:**
 ```powershell
-.\Test-Encryption.ps1
+.\Encryption-Scripts\Test-Encryption.ps1
 ```
 
 📖 **See [ENCRYPTION-README.md](ENCRYPTION-README.md) for complete documentation**

@@ -13,7 +13,7 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Look for the exported extensions file
-$exportPath = Join-Path $PSScriptRoot "vscode-extensions.txt"
+$exportPath = Join-Path (Split-Path $PSScriptRoot -Parent) "Output-Files\vscode-extensions.txt"
 
 if (-not (Test-Path $exportPath)) {
     Write-Host "✗ Export file not found: $exportPath" -ForegroundColor Red

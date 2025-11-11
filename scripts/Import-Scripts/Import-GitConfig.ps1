@@ -13,7 +13,7 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Look for the exported config file
-$exportPath = Join-Path $PSScriptRoot "git-config-backup.txt"
+$exportPath = Join-Path (Split-Path $PSScriptRoot -Parent) "Output-Files\git-config-backup.txt"
 $encryptedPath = "$exportPath.encrypted"
 
 # Check if encrypted version exists
@@ -26,7 +26,7 @@ if (-not (Test-Path $exportPath) -and (Test-Path $encryptedPath)) {
     
     try {
         Write-Host "Decrypting file..." -ForegroundColor Yellow
-        & (Join-Path $PSScriptRoot "Unprotect-ConfigFile.ps1") -FilePath $encryptedPath -Password $password -DeleteEncrypted
+        & (Join-Path (Split-Path $PSScriptRoot -Parent) "Encryption-Scripts\Unprotect-ConfigFile.ps1") -FilePath $encryptedPath -Password $password -DeleteEncrypted
         Write-Host "✓ File decrypted successfully!" -ForegroundColor Green
         Write-Host ""
     }

@@ -16,7 +16,7 @@ Write-Host ""
 $historyPath = (Get-PSReadLineOption).HistorySavePath
 
 if (Test-Path $historyPath) {
-    $exportPath = Join-Path $PSScriptRoot "PSReadLine-History-Export.txt"
+    $exportPath = Join-Path (Split-Path $PSScriptRoot -Parent) "Output-Files\PSReadLine-History-Export.txt"
     
     # Copy the history file
     Copy-Item -Path $historyPath -Destination $exportPath -Force

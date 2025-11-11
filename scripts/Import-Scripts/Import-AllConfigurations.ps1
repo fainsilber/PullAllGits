@@ -15,8 +15,9 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Check for encrypted files
-$scriptPath = $PSScriptRoot
-$encryptedFiles = Get-ChildItem -Path $scriptPath -Filter "*.encrypted" -ErrorAction SilentlyContinue
+$scriptPath = Split-Path $PSScriptRoot -Parent
+$outputPath = Join-Path $scriptPath "Output-Files"
+$encryptedFiles = Get-ChildItem -Path $outputPath -Filter "*.encrypted" -ErrorAction SilentlyContinue
 
 if ($encryptedFiles) {
     Write-Host "Encrypted files detected!" -ForegroundColor Cyan
@@ -74,7 +75,7 @@ Write-Host "  Starting Configuration Import" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-$scriptPath = $PSScriptRoot
+$scriptPath = Split-Path $PSScriptRoot -Parent
 $importScripts = @(
     "Import-PSReadLineHistory.ps1",
     "Import-VSCodeExtensions.ps1",
@@ -85,7 +86,7 @@ $importScripts = @(
 $results = @()
 
 foreach ($script in $importScripts) {
-    $fullPath = Join-Path $scriptPath $script
+    $fullPath = Join-Path $scriptPath "Import-Scripts\$script"
     
     if (Test-Path $fullPath) {
         Write-Host "Running $script..." -ForegroundColor Cyan

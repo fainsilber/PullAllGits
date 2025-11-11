@@ -35,7 +35,7 @@ if (-not (Test-Path $gitConfigPath)) {
 }
 
 # Export git config
-$exportPath = Join-Path $PSScriptRoot "git-config-backup.txt"
+$exportPath = Join-Path (Split-Path $PSScriptRoot -Parent) "Output-Files\git-config-backup.txt"
 
 try {
     Copy-Item -Path $gitConfigPath -Destination $exportPath -Force

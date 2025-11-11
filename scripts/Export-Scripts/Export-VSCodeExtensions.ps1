@@ -45,8 +45,8 @@ Write-Host "Exporting extensions..." -ForegroundColor Yellow
 Write-Host ""
 
 # Export extensions list
-$exportPath = Join-Path $PSScriptRoot "vscode-extensions.txt"
-$extensionsListPath = Join-Path $PSScriptRoot "vscode-extensions-list.txt"
+$exportPath = Join-Path (Split-Path $PSScriptRoot -Parent) "Output-Files\vscode-extensions.txt"
+$extensionsListPath = Join-Path (Split-Path $PSScriptRoot -Parent) "Output-Files\vscode-extensions-list.txt"
 
 try {
     # Get list of installed extensions

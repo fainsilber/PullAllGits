@@ -29,7 +29,7 @@ Write-Host "  Batch Configuration Encryption" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-$scriptPath = $PSScriptRoot
+$scriptPath = Split-Path $PSScriptRoot -Parent
 
 # Define files that should be encrypted
 $filesToEncrypt = @(
@@ -41,8 +41,9 @@ $filesToEncrypt = @(
 
 # Check which files exist
 $existingFiles = @()
+$outputPath = Join-Path $scriptPath "Output-Files"
 foreach ($file in $filesToEncrypt) {
-    $filePath = Join-Path $scriptPath $file
+    $filePath = Join-Path $outputPath $file
     if (Test-Path $filePath) {
         # Check if already encrypted
         if (Test-Path "$filePath.encrypted") {
@@ -115,10 +116,10 @@ foreach ($file in $existingFiles) {
         Write-Host "  Encrypting: $fileName..." -ForegroundColor Yellow
         
         if ($DeleteOriginals) {
-            & (Join-Path $scriptPath "Protect-ConfigFile.ps1") -FilePath $file -Password $Password -DeleteOriginal 2>&1 | Out-Null
+            & (Join-Path $scriptPath "Encryption-Scripts\Protect-ConfigFile.ps1") -FilePath $file -Password $Password -DeleteOriginal 2>&1 | Out-Null
         }
         else {
-            & (Join-Path $scriptPath "Protect-ConfigFile.ps1") -FilePath $file -Password $Password 2>&1 | Out-Null
+            & (Join-Path $scriptPath "Encryption-Scripts\Protect-ConfigFile.ps1") -FilePath $file -Password $Password 2>&1 | Out-Null
         }
         
         if (Test-Path "$file.encrypted") {

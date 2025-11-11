@@ -29,14 +29,15 @@ Write-Host "  Batch Configuration Decryption" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-$scriptPath = $PSScriptRoot
+$scriptPath = Split-Path $PSScriptRoot -Parent
+$outputPath = Join-Path $scriptPath "Output-Files"
 
 # Find all encrypted files
-$encryptedFiles = Get-ChildItem -Path $scriptPath -Filter "*.encrypted" -ErrorAction SilentlyContinue
+$encryptedFiles = Get-ChildItem -Path $outputPath -Filter "*.encrypted" -ErrorAction SilentlyContinue
 
 if (-not $encryptedFiles -or $encryptedFiles.Count -eq 0) {
     Write-Host "No encrypted files found in:" -ForegroundColor Yellow
-    Write-Host "  $scriptPath" -ForegroundColor Cyan
+    Write-Host "  $outputPath" -ForegroundColor Cyan
     Write-Host ""
     exit 0
 }
@@ -67,10 +68,10 @@ foreach ($file in $encryptedFiles) {
         Write-Host "  Decrypting: $($file.Name)..." -ForegroundColor Yellow
         
         if ($DeleteEncrypted) {
-            & (Join-Path $scriptPath "Unprotect-ConfigFile.ps1") -FilePath $file.FullName -Password $Password -DeleteEncrypted 2>&1 | Out-Null
+            & (Join-Path $scriptPath "Encryption-Scripts\Unprotect-ConfigFile.ps1") -FilePath $file.FullName -Password $Password -DeleteEncrypted 2>&1 | Out-Null
         }
         else {
-            & (Join-Path $scriptPath "Unprotect-ConfigFile.ps1") -FilePath $file.FullName -Password $Password 2>&1 | Out-Null
+            & (Join-Path $scriptPath "Encryption-Scripts\Unprotect-ConfigFile.ps1") -FilePath $file.FullName -Password $Password 2>&1 | Out-Null
         }
         
         $decryptedFile = $file.FullName -replace '\.encrypted$', ''

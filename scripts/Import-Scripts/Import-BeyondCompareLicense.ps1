@@ -16,8 +16,8 @@ Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
 # Look for the exported license file
-$exportPath = Join-Path $PSScriptRoot "BeyondCompare-License.reg"
-$metadataPath = Join-Path $PSScriptRoot "BeyondCompare-License-Info.json"
+$exportPath = Join-Path (Split-Path $PSScriptRoot -Parent) "Output-Files\BeyondCompare-License.reg"
+$metadataPath = Join-Path (Split-Path $PSScriptRoot -Parent) "Output-Files\BeyondCompare-License-Info.json"
 $encryptedLicensePath = "$exportPath.encrypted"
 $encryptedMetadataPath = "$metadataPath.encrypted"
 
@@ -31,14 +31,14 @@ if (-not (Test-Path $exportPath) -and (Test-Path $encryptedLicensePath)) {
     
     try {
         Write-Host "Decrypting license file..." -ForegroundColor Yellow
-        & (Join-Path $PSScriptRoot "Unprotect-ConfigFile.ps1") -FilePath $encryptedLicensePath -Password $password -DeleteEncrypted
+        & (Join-Path (Split-Path $PSScriptRoot -Parent) "Encryption-Scripts\Unprotect-ConfigFile.ps1") -FilePath $encryptedLicensePath -Password $password -DeleteEncrypted
         Write-Host "✓ License file decrypted!" -ForegroundColor Green
         Write-Host ""
         
         # Decrypt metadata if it exists
         if (Test-Path $encryptedMetadataPath) {
             Write-Host "Decrypting metadata file..." -ForegroundColor Yellow
-            & (Join-Path $PSScriptRoot "Unprotect-ConfigFile.ps1") -FilePath $encryptedMetadataPath -Password $password -DeleteEncrypted
+            & (Join-Path (Split-Path $PSScriptRoot -Parent) "Encryption-Scripts\Unprotect-ConfigFile.ps1") -FilePath $encryptedMetadataPath -Password $password -DeleteEncrypted
             Write-Host "✓ Metadata file decrypted!" -ForegroundColor Green
             Write-Host ""
         }

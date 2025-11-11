@@ -15,7 +15,7 @@ Write-Host ""
 
 $testsPassed = 0
 $testsFailed = 0
-$scriptPath = $PSScriptRoot
+$scriptPath = Split-Path $PSScriptRoot -Parent
 
 # Test 1: Create test file
 Write-Host "Test 1: Creating test file..." -ForegroundColor Yellow
@@ -47,7 +47,7 @@ Write-Host "Test 2: Encrypting test file..." -ForegroundColor Yellow
 $password = ConvertTo-SecureString "TestPassword123!" -AsPlainText -Force
 
 try {
-    & (Join-Path $scriptPath "Protect-ConfigFile.ps1") -FilePath $testFile -Password $password -DeleteOriginal | Out-Null
+    & (Join-Path $scriptPath "Encryption-Scripts\Protect-ConfigFile.ps1") -FilePath $testFile -Password $password -DeleteOriginal | Out-Null
     
     $encryptedFile = "$testFile.encrypted"
     if (Test-Path $encryptedFile) {
@@ -79,7 +79,7 @@ Write-Host "Test 3: Decrypting test file..." -ForegroundColor Yellow
 $encryptedFile = "$testFile.encrypted"
 
 try {
-    & (Join-Path $scriptPath "Unprotect-ConfigFile.ps1") -FilePath $encryptedFile -Password $password -DeleteEncrypted | Out-Null
+    & (Join-Path $scriptPath "Encryption-Scripts\Unprotect-ConfigFile.ps1") -FilePath $encryptedFile -Password $password -DeleteEncrypted | Out-Null
     
     if (Test-Path $testFile) {
         Write-Host "  ✓ File decrypted successfully" -ForegroundColor Green
@@ -127,12 +127,12 @@ Write-Host "Test 5: Testing wrong password handling..." -ForegroundColor Yellow
 # Re-encrypt the file
 $encryptedFile = "$testFile.encrypted"
 try {
-    & (Join-Path $scriptPath "Protect-ConfigFile.ps1") -FilePath $testFile -Password $password -DeleteOriginal | Out-Null
+    & (Join-Path $scriptPath "Encryption-Scripts\Protect-ConfigFile.ps1") -FilePath $testFile -Password $password -DeleteOriginal | Out-Null
     
     # Try to decrypt with wrong password
     $wrongPassword = ConvertTo-SecureString "WrongPassword!" -AsPlainText -Force
     
-    $output = & (Join-Path $scriptPath "Unprotect-ConfigFile.ps1") -FilePath $encryptedFile -Password $wrongPassword 2>&1
+    $output = & (Join-Path $scriptPath "Encryption-Scripts\Unprotect-ConfigFile.ps1") -FilePath $encryptedFile -Password $wrongPassword 2>&1
     $decryptFailed = ($LASTEXITCODE -ne 0) -or ($output -like "*Decryption failed*")
     
     if ($decryptFailed) {

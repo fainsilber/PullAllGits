@@ -14,7 +14,7 @@ Write-Host "  Backing up all configurations" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
 
-$scriptPath = $PSScriptRoot
+$scriptPath = Split-Path $PSScriptRoot -Parent
 $exportScripts = @(
     "Export-PSReadLineHistory.ps1",
     "Export-VSCodeExtensions.ps1",
@@ -25,7 +25,7 @@ $exportScripts = @(
 $results = @()
 
 foreach ($script in $exportScripts) {
-    $fullPath = Join-Path $scriptPath $script
+    $fullPath = Join-Path $scriptPath "Export-Scripts\$script"
     
     if (Test-Path $fullPath) {
         Write-Host "Running $script..." -ForegroundColor Cyan
@@ -115,7 +115,7 @@ if ($encrypt -eq 'Y' -or $encrypt -eq 'y') {
         )
         
         foreach ($file in $filesToEncrypt) {
-            $filePath = Join-Path $scriptPath $file
+            $filePath = Join-Path $scriptPath "Output-Files\$file"
             if (Test-Path $filePath) {
                 try {
                     & (Join-Path $scriptPath "Protect-ConfigFile.ps1") -FilePath $filePath -Password $password -DeleteOriginal
