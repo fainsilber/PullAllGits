@@ -47,17 +47,47 @@ if (-not (Test-Path $exportPath)) {
 }
 
 # Check if Git is installed
-try {
-    $null = Get-Command git -ErrorAction Stop
-}
-catch {
-    Write-Host "✗ Git not found. Please ensure Git is installed." -ForegroundColor Red
-    Write-Host "  You may need to restart your terminal after installing Git." -ForegroundColor Yellow
+$gitCommand = Get-Command git -ErrorAction SilentlyContinue
+if (-not $gitCommand) {
+    Write-Host "✗ Git not found in PATH." -ForegroundColor Red
     Write-Host ""
+    
+    # Check common installation locations
+    $gitPaths = @(
+        "C:\Program Files\Git\bin\git.exe",
+        "C:\Program Files (x86)\Git\bin\git.exe",
+        "$env:LOCALAPPDATA\Programs\Git\bin\git.exe"
+    )
+    
+    $gitExePath = $null
+    foreach ($path in $gitPaths) {
+        if (Test-Path $path) {
+            $gitExePath = $path
+            break
+        }
+    }
+    
+    if ($gitExePath) {
+        Write-Host "✓ Found Git installed at: $gitExePath" -ForegroundColor Green
+        Write-Host ""
+        Write-Host "However, Git is not in your PATH. You have two options:" -ForegroundColor Yellow
+        Write-Host "  1. Add Git to your system PATH and restart your terminal" -ForegroundColor White
+        Write-Host "  2. Re-run the setup-new-pc.ps1 script (it will fix PATH automatically)" -ForegroundColor White
+        Write-Host ""
+        Write-Host "Temporary fix for this session:" -ForegroundColor Cyan
+        Write-Host "  `$env:PATH += ';$(Split-Path $gitExePath -Parent)'" -ForegroundColor Gray
+        Write-Host ""
+    }
+    else {
+        Write-Host "Git does not appear to be installed." -ForegroundColor Yellow
+        Write-Host "Please install Git first, then run this script again." -ForegroundColor White
+        Write-Host ""
+    }
+    
     exit 1
 }
 
-Write-Host "✓ Found Git" -ForegroundColor Green
+Write-Host "✓ Found Git ($(git --version))" -ForegroundColor Green
 Write-Host ""
 
 # Backup existing config if it exists

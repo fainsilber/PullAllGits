@@ -81,6 +81,73 @@ foreach ($software in $softwareList) {
 
 Write-Host ""
 Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "  Verifying Git Installation" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+
+# Check if Git is accessible in PATH
+$gitCommand = Get-Command git -ErrorAction SilentlyContinue
+if (-not $gitCommand) {
+    Write-Host "Git not found in PATH. Checking standard installation locations..." -ForegroundColor Yellow
+    
+    # Common Git installation paths
+    $gitPaths = @(
+        "C:\Program Files\Git\bin",
+        "C:\Program Files (x86)\Git\bin",
+        "$env:LOCALAPPDATA\Programs\Git\bin"
+    )
+    
+    $gitFound = $false
+    foreach ($path in $gitPaths) {
+        if (Test-Path (Join-Path $path "git.exe")) {
+            Write-Host "✓ Found Git at: $path" -ForegroundColor Green
+            
+            # Get current system PATH
+            $currentPath = [Environment]::GetEnvironmentVariable("Path", "Machine")
+            
+            # Check if path is already in system PATH
+            if ($currentPath -notlike "*$path*") {
+                Write-Host "Adding Git to system PATH..." -ForegroundColor Yellow
+                try {
+                    # Add to system PATH (requires admin)
+                    [Environment]::SetEnvironmentVariable(
+                        "Path",
+                        "$currentPath;$path",
+                        "Machine"
+                    )
+                    
+                    # Also add to current session
+                    $env:PATH += ";$path"
+                    
+                    Write-Host "✓ Git added to system PATH successfully" -ForegroundColor Green
+                    Write-Host "  (Will be available in new terminal sessions)" -ForegroundColor Gray
+                    $gitFound = $true
+                    break
+                }
+                catch {
+                    Write-Host "✗ Failed to add Git to system PATH: $_" -ForegroundColor Red
+                    Write-Host "  You may need to add it manually or run this script as Administrator" -ForegroundColor Yellow
+                }
+            }
+            else {
+                Write-Host "✓ Git is already in system PATH" -ForegroundColor Green
+                $gitFound = $true
+                break
+            }
+        }
+    }
+    
+    if (-not $gitFound) {
+        Write-Host "✗ Git installation not found in standard locations" -ForegroundColor Red
+        Write-Host "  Please ensure Git is installed and restart your terminal" -ForegroundColor Yellow
+    }
+}
+else {
+    Write-Host "✓ Git is accessible (version: $(git --version))" -ForegroundColor Green
+}
+
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
 Write-Host "  Configuring PowerShell Profile" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 Write-Host ""
